@@ -1,0 +1,3 @@
+[submodule "infra/terraform-module-dockerized-gitlab-runner"]
+	path = infra/terraform-module-dockerized-gitlab-runner
+	url = https://github.com/davidfischer-ch/terraform-module-dockerized-gitlab-runner.git

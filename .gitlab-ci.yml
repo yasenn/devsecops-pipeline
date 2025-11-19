@@ -1,18 +1,14 @@
-stages:
-- unit_test
-- lint
-- SAST
-- dependency_check
-- k8s_lint
-- SCA
-- secret_detection
-- build
-- DAST
-- k8s_config_scan
-- deploy
-- IaC_scan
-- fuzzing
-sast:
-  stage: SAST
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  SECURE_LOG_LEVEL: debug
+
 include:
-- template: Security/SAST.gitlab-ci.yml
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+  - template: Jobs/Dependency-Scanning.gitlab-ci.yml
+  - template: Jobs/SAST.gitlab-ci.yml
+
+
+secret_detection:
+  variables:
+    GIT_DEPTH: 100
+
