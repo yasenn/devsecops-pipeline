@@ -11,7 +11,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Yandex CR Login
-      uses: yc-actions/yc-cr-login@v1
+      uses: yc-actions/yc-cr-login@v3.0.2
       with: 
         yc-sa-json-credentials: ${{secrets.YCR_CREDS_JSON}}
     - name: Build 

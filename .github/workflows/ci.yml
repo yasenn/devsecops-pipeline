@@ -73,3 +73,5 @@ jobs:
         shell: bash
       - id: govulncheck
         uses: golang/govulncheck-action@v1
+        with:
+          go-package: whoami/...
