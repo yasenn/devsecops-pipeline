@@ -30,6 +30,5 @@ jobs:
           cache-dependency-path: |
             requirements.txt
             requirements-frozen.txt
-          install-cmd: source ./venv/bin/activate
       - name: AppSec Scanner
         uses: NirAlon/appsec_scan@latest
