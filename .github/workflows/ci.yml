@@ -1,8 +1,8 @@
 on:
-  push:
-    branches:
-      - master
-      - github-actions
+  #   push:
+  #     branches:
+  #       - master
+  #       - github-actions
   workflow_dispatch:
     inputs:
       run_manual_steps:
