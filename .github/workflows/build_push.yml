@@ -14,9 +14,16 @@ jobs:
       uses: yc-actions/yc-cr-login@v1
       with: 
         yc-sa-json-credentials: ${{secrets.YCR_CREDS_JSON}}
-    - name: Build and Push
+    - name: Build 
       run: |
         cd whoami
         docker build -t cr.yandex/${{secrets.YCR_REGISTRY}}/${{secrets.YCR_REPO}}:${{github.sha}} .
+        docker push cr.yandex/${{secrets.YCR_REGISTRY}}/${{secrets.YCR_REPO}}:${{github.sha}}
+        echo 'IMAGE TAG: ${{github.sha}}'
+    - name: scan image with trivy
+      run: |
+        trivy image cr.yandex/${{secrets.YCR_REGISTRY}}/${{secrets.YCR_REPO}}:${{github.sha}} --exit-code 0 --format table .
+    - name: Push
+      run: |
         docker push cr.yandex/${{secrets.YCR_REGISTRY}}/${{secrets.YCR_REPO}}:${{github.sha}}
         echo 'IMAGE TAG: ${{github.sha}}'
