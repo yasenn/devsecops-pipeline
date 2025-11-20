@@ -21,7 +21,7 @@ jobs:
         echo 'IMAGE TAG: ${{github.sha}}'
     - name: scan image with trivy
       run: |
-        trivy image cr.yandex/${{secrets.YCR_REGISTRY}}/${{secrets.YCR_REPO}}:${{github.sha}} --exit-code 0 --format table .
+        /usr/local/bin/trivy image cr.yandex/${{secrets.YCR_REGISTRY}}/${{secrets.YCR_REPO}}:${{github.sha}} --exit-code 0 --format table .
     - name: Push
       run: |
         docker push cr.yandex/${{secrets.YCR_REGISTRY}}/${{secrets.YCR_REPO}}:${{github.sha}}

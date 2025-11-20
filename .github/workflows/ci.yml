@@ -1,8 +1,5 @@
 on:
-  #   push:
-  #     branches:
-  #       - master
-  #       - github-actions
+  push:
   workflow_dispatch:
     inputs:
       run_manual_steps:
@@ -74,3 +71,5 @@ jobs:
           fi
           trivy fs --exit-code 0 --format table .
         shell: bash
+      - id: govulncheck
+        uses: golang/govulncheck-action@v1
