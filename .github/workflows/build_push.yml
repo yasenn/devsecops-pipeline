@@ -18,7 +18,6 @@ jobs:
       run: |
         cd whoami
         docker build -t cr.yandex/${{secrets.YCR_REGISTRY}}/${{secrets.YCR_REPO}}:${{github.sha}} .
-        docker push cr.yandex/${{secrets.YCR_REGISTRY}}/${{secrets.YCR_REPO}}:${{github.sha}}
         echo 'IMAGE TAG: ${{github.sha}}'
     - name: scan image with trivy
       run: |
