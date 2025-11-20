@@ -21,7 +21,11 @@ jobs:
         echo 'IMAGE TAG: ${{github.sha}}'
     - name: scan image with trivy
       run: |
-        /usr/local/bin/trivy image cr.yandex/${{secrets.YCR_REGISTRY}}/${{secrets.YCR_REPO}}:${{github.sha}} --exit-code 0 --format table
+        if ! trivy version &> /dev/null; then
+          set -e -o pipefail
+          curl -sSL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin > /dev/null
+        fi
+        trivy image cr.yandex/${{secrets.YCR_REGISTRY}}/${{secrets.YCR_REPO}}:${{github.sha}} --exit-code 0 --format table
     - name: Push
       run: |
         docker push cr.yandex/${{secrets.YCR_REGISTRY}}/${{secrets.YCR_REPO}}:${{github.sha}}
