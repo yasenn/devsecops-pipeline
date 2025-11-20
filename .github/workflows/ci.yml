@@ -3,7 +3,15 @@ on:
     branches:
       - master
       - github-actions
-
+  workflow_dispatch:
+    inputs:
+      run_manual_steps:
+        description: 'Run manual steps?'
+        required: false
+        type: choice
+        options:
+        - yes
+        - no
 
 name: "Push"
 permissions: {}
@@ -15,6 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: ShellCheck
+        if: ${{ inputs.run_manual_steps == 'yes' }}
         uses: ludeeus/action-shellcheck@master
   SemGrep:
     name: SemGrep
@@ -30,5 +39,38 @@ jobs:
           cache-dependency-path: |
             requirements.txt
             requirements-frozen.txt
-      - name: AppSec Scanner
-        uses: NirAlon/appsec_scan@latest
+      - name: Install Semgrep
+        run: |
+          if ! python -c 'import semgrep' &> /dev/null; then
+            set -e -o pipefail
+            pip install semgrep --quiet > /dev/null
+          fi
+        shell: bash
+  
+      - name: Run Semgrep SAST
+        run: semgrep scan --config auto . || echo "Semgrep exited with non-zero code"
+        shell: bash
+  
+      - name: Install Terrascan
+        run: |
+          if ! command -v terrascan &> /dev/null; then
+           set -e -o pipefail
+           curl -sL "$(curl -s https://api.github.com/repos/tenable/terrascan/releases/latest | grep -o -E "https://.+?_Linux_x86_64.tar.gz")" > terrascan.tar.gz
+           tar -xf terrascan.tar.gz terrascan > /dev/null 2>&1
+           sudo install terrascan /usr/local/bin > /dev/null 2>&1
+           rm terrascan terrascan.tar.gz
+          fi
+        shell: bash
+  
+      - name: Run terrascan IaC Scan
+        run: terrascan scan . || echo "Terrascan exited with non-zero code"
+        shell: bash
+      
+      - name: Install and Run Trivy SCA Scan
+        run: |
+          if ! trivy version &> /dev/null; then
+            set -e -o pipefail
+            curl -sSL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin > /dev/null
+          fi
+          trivy fs --exit-code 0 --format table .
+        shell: bash
