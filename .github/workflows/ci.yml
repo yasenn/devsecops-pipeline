@@ -1,0 +1,25 @@
+on:
+  push:
+    branches:
+      - master
+
+name: "Push"
+permissions: {}
+
+jobs:
+  shellcheck:
+    name: Shellcheck
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      - name: ShellCheck
+        uses: ludeeus/action-shellcheck@master
+
+jobs:
+  SemGrep:
+    name: SemGrep
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      - name: AppSec Scanner
+        uses: NirAlon/appsec_scan@latest
