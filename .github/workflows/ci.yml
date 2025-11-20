@@ -14,8 +14,6 @@ jobs:
       - uses: actions/checkout@v4
       - name: ShellCheck
         uses: ludeeus/action-shellcheck@master
-
-jobs:
   SemGrep:
     name: SemGrep
     runs-on: self-hosted
